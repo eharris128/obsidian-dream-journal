@@ -2,6 +2,7 @@ import { Plugin, WorkspaceLeaf, ItemView } from 'obsidian';
 import { createRoot, Root } from 'react-dom/client';
 import { StrictMode } from 'react';
 import { ReactView } from './views/ReactView';
+import { AppContext } from './context';
 
 const VIEW_TYPE_EXAMPLE = 'example-react-view';
 
@@ -24,9 +25,11 @@ class ExampleReactView extends ItemView {
         const { containerEl } = this;
         this.root = createRoot(containerEl);
         this.root.render(
-            <StrictMode>
-                <ReactView />
-            </StrictMode>
+            <AppContext.Provider value={this.app}>
+                <StrictMode>
+                    <ReactView />
+                </StrictMode>
+            </AppContext.Provider>
         );
     }
 
@@ -49,7 +52,7 @@ export default class MyReactPlugin extends Plugin {
 
     async activateView() {
         const { workspace } = this.app;
-        
+
         let leaf = workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE)[0];
         if (!leaf) {
             leaf = workspace.getLeaf(false);
