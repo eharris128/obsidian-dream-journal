@@ -1,8 +1,18 @@
-export const ReactView: React.FC = () => {
+import { useApp } from '../hooks/useApp';
+import { Dream } from '../components/Dream';
+
+export const ReactView = () => {
+    const app = useApp();
+
+    if (!app) {
+        return <div>Loading...</div>;
+    }
+    const { vault } = app;
+  
     return (
-        <div>
-            <h1>Hello from React in Obsidian!</h1>
-            <p>This is a React component rendered within an Obsidian plugin.</p>
-        </div>
+    <div>
+        <h4>{vault.getName()}</h4>
+        <Dream />
+    </div>
     );
-};
+  };
