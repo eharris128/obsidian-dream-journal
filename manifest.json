@@ -1,0 +1,10 @@
+{
+	"id": "dream-journal",
+	"name": "Dream Journal",
+	"version": "0.0.1", 
+	"minAppVersion": "0.15.0",
+	"description": "Record dreams.",
+	"author": "eharris128",
+	"authorUrl": "https://bsky.app/profile/evanharris.bsky.social",
+	"isDesktopOnly": false
+}

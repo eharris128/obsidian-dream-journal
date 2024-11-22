@@ -1,0 +1,31 @@
+{
+	"name": "obsidian-dream-journal",
+	"version": "0.0.1",
+	"description": "Record dreams.",
+	"main": "main.js",
+	"scripts": {
+		"dev": "node esbuild.config.mjs",
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"version": "node version-bump.mjs && git add manifest.json versions.json"
+	},
+	"keywords": [],
+	"author": "eharris128",
+	"license": "MIT",
+	"devDependencies": {
+		"@atproto/api": "^0.13.14",
+		"@types/node": "^16.11.6",
+		"@types/react": "^18.3.12",
+		"@types/react-dom": "^18.3.1",
+		"@typescript-eslint/eslint-plugin": "5.29.0",
+		"@typescript-eslint/parser": "5.29.0",
+		"builtin-modules": "3.3.0",
+		"esbuild": "0.17.3",
+		"obsidian": "latest",
+		"tslib": "2.4.0",
+		"typescript": "4.7.4"
+	},
+	"dependencies": {
+		"react": "19.0.0-rc.1",
+		"react-dom": "19.0.0-rc.1"
+	}
+}
