@@ -18,7 +18,7 @@ class ExampleReactView extends ItemView {
     }
 
     getDisplayText() {
-        return 'Example React View';
+        return 'Record dreams';
     }
 
     async onOpen() {
@@ -45,7 +45,7 @@ export default class MyReactPlugin extends Plugin {
             (leaf) => new ExampleReactView(leaf)
         );
 
-        this.addRibbonIcon('dice', 'Open Example React View', () => {
+        this.addRibbonIcon('moon', 'Open dream journal', () => {
             this.activateView();
         });
     }
