@@ -1,5 +1,5 @@
-import { useApp } from '../hooks/useApp';
-import { Dream } from '../components/Dream';
+import { useApp } from '@/hooks/useApp';
+import { Dream } from '@/components/Dream';
 
 export const ReactView = () => {
     const app = useApp();

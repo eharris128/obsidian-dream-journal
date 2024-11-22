@@ -1,8 +1,8 @@
 import { Plugin, WorkspaceLeaf, ItemView } from 'obsidian';
 import { createRoot, Root } from 'react-dom/client';
 import { StrictMode } from 'react';
-import { ReactView } from './views/ReactView';
-import { AppContext } from './context';
+import { ReactView } from '@/views/ReactView';
+import { AppContext } from '@/context';
 
 const VIEW_TYPE_EXAMPLE = 'example-react-view';
 
