@@ -5,6 +5,8 @@ import { ReactView } from '@/views/ReactView';
 import { AppContext } from '@/context';
 
 const VIEW_TYPE_EXAMPLE = 'example-react-view';
+const DREAM_JOURNAL_DIR = 'dream-journal';
+const DREAMS_DIR = `${DREAM_JOURNAL_DIR}/dreams`;
 
 class ExampleReactView extends ItemView {
     root: Root | null = null;
@@ -48,6 +50,19 @@ export default class MyReactPlugin extends Plugin {
         this.addRibbonIcon('moon', 'Open dream journal', () => {
             this.activateView();
         });
+
+        // Create the dream-journal and dreams directories if they don't exist
+        await this.createDreamJournalDirectories();
+    }
+
+    async createDreamJournalDirectories() {
+        const { vault } = this.app;
+        if (!(await vault.adapter.exists(DREAM_JOURNAL_DIR))) {
+            await vault.createFolder(DREAM_JOURNAL_DIR);
+        }
+        if (!(await vault.adapter.exists(DREAMS_DIR))) {
+            await vault.createFolder(DREAMS_DIR);
+        }
     }
 
     async activateView() {
@@ -62,9 +77,5 @@ export default class MyReactPlugin extends Plugin {
             });
         }
         workspace.revealLeaf(leaf);
-    }
-
-    onunload() {
-        this.app.workspace.detachLeavesOfType(VIEW_TYPE_EXAMPLE);
     }
 }
