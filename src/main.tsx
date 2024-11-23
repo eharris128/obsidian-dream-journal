@@ -40,15 +40,26 @@ class TabViewContainer extends ItemView {
     }
 }
 
-export default class MyReactPlugin extends Plugin {
+const OPEN_DREAM_JOURNAL = 'open-dream-journal';
+
+export default class DreamJournalPlugin extends Plugin {
     async onload() {
         this.registerView(
             DREAM_JOURNAL_TAB,
             (leaf) => new TabViewContainer(leaf)
         );
 
-        this.addRibbonIcon('moon', 'Open dream journal', () => {
+        this.addRibbonIcon('moon', OPEN_DREAM_JOURNAL, () => {
             this.activateView();
+        });
+
+        this.addCommand({
+            id: OPEN_DREAM_JOURNAL,
+            name: 'Open Dream Journal',
+            callback: () => {
+                this.activateView();
+            },
+            hotkeys: []
         });
 
         await this.createDreamJournalDirectories();
