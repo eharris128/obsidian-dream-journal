@@ -13,14 +13,18 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
-    setIsFormValid(dreamTitle.trim() !== '' && dreamContent.trim() !== '' && selectedEmotions.length > 0);
-  }, [dreamTitle, dreamContent, selectedEmotions]);
+    setIsFormValid(dreamTitle.trim() !== '' && dreamContent.trim() !== '');
+  }, [dreamTitle, dreamContent]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitted(true);
     if (isFormValid) {
-      onSubmit(dreamTitle, dreamContent, selectedEmotions);
+      const emotionsSection = selectedEmotions.length > 0 
+        ? `\n\n# I felt:)\n${selectedEmotions.join(', ')}`
+        : '';
+      const fullDreamContent = `${dreamContent}${emotionsSection}`;
+      onSubmit(dreamTitle, fullDreamContent, selectedEmotions);
       setDreamTitle('');
       setDreamContent('');
       setSelectedEmotions([]);
@@ -61,7 +65,7 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
         />
       </div>
       <div className="form-group">
-        <label>Emotions felt</label>
+        <label>I felt:</label>
         <EmotionWheel selectedEmotions={selectedEmotions} onEmotionToggle={handleEmotionToggle} />
       </div>
       <button 
