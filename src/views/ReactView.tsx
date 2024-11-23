@@ -27,7 +27,10 @@ export class ReactView extends ItemView {
 
     async onOpen() {
         const { containerEl } = this;
-        this.root = createRoot(containerEl);
+        containerEl.empty();
+
+        const contentContainer = containerEl.createDiv({ cls: 'react-view-content' });
+        this.root = createRoot(contentContainer);
         this.root.render(
             <AppContext.Provider value={this.app}>
                 <StrictMode>

@@ -24,7 +24,7 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
     setIsSubmitted(true);
     if (isFormValid) {
       const emotionsSection = selectedEmotions.length > 0
-        ? `\n\n# I felt:)\n${selectedEmotions.join(', ')}`
+        ? `\n\n# I felt:\n${selectedEmotions.join(', ')}`
         : '';
       const fullDreamContent = `${dreamContent}${emotionsSection}`;
       onSubmit(dreamTitle, fullDreamContent, selectedEmotions);
