@@ -1,6 +1,6 @@
 import { Dream } from '@/components/Dream';
 
-export const ReactView = () => {
+export const TabView = () => {
     return (
     <div className="dream-journal-container">
         <Dream />

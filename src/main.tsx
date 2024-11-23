@@ -1,14 +1,14 @@
 import { Plugin, WorkspaceLeaf, ItemView } from 'obsidian';
 import { createRoot, Root } from 'react-dom/client';
 import { StrictMode } from 'react';
-import { ReactView } from '@/views/ReactView';
+import { TabView } from '@/views/TabView';
 import { AppContext } from '@/context';
 
-const VIEW_TYPE_EXAMPLE = 'example-react-view';
+const DREAM_JOURNAL_TAB = 'dream-journal-tab-view';
 const DREAM_JOURNAL_DIR = 'dream-journal';
 const DREAMS_DIR = `${DREAM_JOURNAL_DIR}/dreams`;
 
-class ExampleReactView extends ItemView {
+class TabViewContainer extends ItemView {
     root: Root | null = null;
 
     constructor(leaf: WorkspaceLeaf) {
@@ -16,7 +16,7 @@ class ExampleReactView extends ItemView {
     }
 
     getViewType() {
-        return VIEW_TYPE_EXAMPLE;
+        return DREAM_JOURNAL_TAB;
     }
 
     getDisplayText() {
@@ -29,7 +29,7 @@ class ExampleReactView extends ItemView {
         this.root.render(
             <AppContext.Provider value={this.app}>
                 <StrictMode>
-                    <ReactView />
+                    <TabView />
                 </StrictMode>
             </AppContext.Provider>
         );
@@ -43,15 +43,14 @@ class ExampleReactView extends ItemView {
 export default class MyReactPlugin extends Plugin {
     async onload() {
         this.registerView(
-            VIEW_TYPE_EXAMPLE,
-            (leaf) => new ExampleReactView(leaf)
+            DREAM_JOURNAL_TAB,
+            (leaf) => new TabViewContainer(leaf)
         );
 
         this.addRibbonIcon('moon', 'Open dream journal', () => {
             this.activateView();
         });
 
-        // Create the dream-journal and dreams directories if they don't exist
         await this.createDreamJournalDirectories();
     }
 
@@ -68,11 +67,11 @@ export default class MyReactPlugin extends Plugin {
     async activateView() {
         const { workspace } = this.app;
 
-        let leaf = workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE)[0];
+        let leaf = workspace.getLeavesOfType(DREAM_JOURNAL_TAB)[0];
         if (!leaf) {
             leaf = workspace.getLeaf(false);
             await leaf.setViewState({
-                type: VIEW_TYPE_EXAMPLE,
+                type: DREAM_JOURNAL_TAB,
                 active: true,
             });
         }
