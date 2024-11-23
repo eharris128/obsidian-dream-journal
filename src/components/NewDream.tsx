@@ -11,7 +11,7 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
   const [selectedEmotions, setSelectedEmotions] = useState<string[]>([]);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const angerEmotionRef = useRef<SVGGElement>(null);
+  const angerEmotionRef = useRef<(SVGGElement | null)[]>([]);
   const saveDreamButtonRef = useRef<HTMLButtonElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
@@ -46,7 +46,7 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
   const handleTextareaKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Tab' && !e.shiftKey) {
       e.preventDefault();
-      angerEmotionRef.current?.focus();
+      angerEmotionRef?.current[0]?.focus();
     }
   };
 

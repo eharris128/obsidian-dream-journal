@@ -92,6 +92,12 @@
     stroke-width: 2;
 }
 
+.emotion-segment.keyboard-focused {
+    stroke: #fff;
+    stroke-width: 3;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
+}
+
 .emotion-name {
     font-size: 16px;
     fill: #000;
