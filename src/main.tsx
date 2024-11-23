@@ -1,52 +1,55 @@
-import { Plugin, WorkspaceLeaf, ItemView } from 'obsidian';
-import { createRoot, Root } from 'react-dom/client';
+import { App, Plugin, PluginSettingTab } from 'obsidian';
 import { StrictMode } from 'react';
-import { TabView } from '@/views/TabView';
+import { createRoot, Root } from 'react-dom/client';
+
 import { AppContext } from '@/context';
+import { TabView } from '@/views/TabView';
+import { SettingsView } from '@/views/SettingsView';
+import { ReactView } from '@/views/ReactView';
 
 const DREAM_JOURNAL_TAB = 'dream-journal-tab-view';
 const DREAM_JOURNAL_DIR = 'dream-journal';
 const DREAMS_DIR = `${DREAM_JOURNAL_DIR}/dreams`;
 
-class TabViewContainer extends ItemView {
-    root: Root | null = null;
+class DreamJournalSettingTab extends PluginSettingTab {
+    plugin: DreamJournalPlugin;
+    private reactRoot: Root | null = null;
 
-    constructor(leaf: WorkspaceLeaf) {
-        super(leaf);
+    constructor(app: App, plugin: DreamJournalPlugin) {
+        super(app, plugin);
+        this.plugin = plugin;
     }
 
-    getViewType() {
-        return DREAM_JOURNAL_TAB;
-    }
-
-    getDisplayText() {
-        return 'Record dreams';
-    }
-
-    async onOpen() {
+    display(): void {
         const { containerEl } = this;
-        this.root = createRoot(containerEl);
-        this.root.render(
-            <AppContext.Provider value={this.app}>
-                <StrictMode>
-                    <TabView />
-                </StrictMode>
-            </AppContext.Provider>
+        containerEl.empty();
+
+        const settingsContainer = containerEl.createDiv();
+        this.reactRoot = createRoot(settingsContainer);
+
+        this.reactRoot.render(
+            <StrictMode>
+                <AppContext.Provider value={this.app}>
+                    <SettingsView />
+                </AppContext.Provider>
+            </StrictMode>
         );
     }
 
-    async onClose() {
-        this.root?.unmount();
+    hide(): void {
+        this.reactRoot?.unmount();
+        this.reactRoot = null;
     }
 }
 
-const OPEN_DREAM_JOURNAL = 'open-dream-journal';
+const OPEN_DREAM_JOURNAL = 'Open dream journal';
+const RECORD_DREAMS = 'Record dreams';
 
 export default class DreamJournalPlugin extends Plugin {
     async onload() {
         this.registerView(
             DREAM_JOURNAL_TAB,
-            (leaf) => new TabViewContainer(leaf)
+            (leaf) => new ReactView(leaf, TabView, DREAM_JOURNAL_TAB, RECORD_DREAMS)
         );
 
         this.addRibbonIcon('moon', OPEN_DREAM_JOURNAL, () => {
@@ -54,13 +57,16 @@ export default class DreamJournalPlugin extends Plugin {
         });
 
         this.addCommand({
-            id: OPEN_DREAM_JOURNAL,
-            name: 'Open Dream Journal',
+            id: 'open-dream-journal',
+            name: RECORD_DREAMS,
             callback: () => {
                 this.activateView();
             },
             hotkeys: []
         });
+
+        // Add settings tab
+        this.addSettingTab(new DreamJournalSettingTab(this.app, this));
 
         await this.createDreamJournalDirectories();
     }
@@ -87,5 +93,10 @@ export default class DreamJournalPlugin extends Plugin {
             });
         }
         workspace.revealLeaf(leaf);
+    }
+
+    onunload() {
+        const leaves = this.app.workspace.getLeavesOfType('dream-journal-settings');
+        leaves.forEach((leaf) => leaf.detach());
     }
 }
