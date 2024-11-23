@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface EmotionWheelProps {
   selectedEmotions: string[];
   onEmotionToggle: (emotion: string) => void;
@@ -59,7 +57,6 @@ export const EmotionWheel: React.FC<EmotionWheelProps> = ({ selectedEmotions, on
               y={textY}
               textAnchor="middle"
               dominantBaseline="middle"
-              // transform={`rotate(${(textAngle * 180) / Math.PI - 90}, ${textX}, ${textY})`}
               className="emotion-name"
             >
               {emotion.name}
