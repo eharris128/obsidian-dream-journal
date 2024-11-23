@@ -33,6 +33,8 @@ export const EmotionWheel: React.FC<EmotionWheelProps> = ({
   const radius = size / 2;
   const emotionRefs = useRef<(SVGGElement | null)[]>([]);
   const wheelRef = useRef<SVGSVGElement>(null);
+  const [lastSelectedEmotion, setLastSelectedEmotion] = useState<string | null>(null);
+  const announcementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     emotionRefs.current = emotionRefs.current.slice(0, EMOTIONS.length);
@@ -61,7 +63,12 @@ export const EmotionWheel: React.FC<EmotionWheelProps> = ({
     switch (e.key) {
       case 'Enter':
       case ' ':
-        onEmotionToggle(EMOTIONS[emotionIndex].name);
+        const emotion = EMOTIONS[emotionIndex].name;
+        onEmotionToggle(emotion);
+        setLastSelectedEmotion(emotion);
+        if (announcementRef.current) {
+          announcementRef.current.textContent = `${emotion} ${selectedEmotions.includes(emotion) ? 'selected' : 'deselected'}`;
+        }
         break;
       case 'ArrowUp':
       case 'ArrowLeft':
@@ -100,72 +107,92 @@ export const EmotionWheel: React.FC<EmotionWheelProps> = ({
   };
 
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox={`0 0 ${size} ${size}`}
-      className="emotion-wheel"
-      ref={wheelRef}
-      tabIndex={0}
-    >
-      {EMOTIONS.map((emotion, index) => {
-        const startAngle = (index * 45 * Math.PI) / 180;
-        const endAngle = ((index + 1) * 45 * Math.PI) / 180;
-        const x1 = center + radius * Math.cos(startAngle);
-        const y1 = center + radius * Math.sin(startAngle);
-        const x2 = center + radius * Math.cos(endAngle);
-        const y2 = center + radius * Math.sin(endAngle);
+    <div className="emotion-wheel-container">
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        className="emotion-wheel"
+        ref={wheelRef}
+        tabIndex={0}
+      >
+        {EMOTIONS.map((emotion, index) => {
+          const startAngle = (index * 45 * Math.PI) / 180;
+          const endAngle = ((index + 1) * 45 * Math.PI) / 180;
+          const x1 = center + radius * Math.cos(startAngle);
+          const y1 = center + radius * Math.sin(startAngle);
+          const x2 = center + radius * Math.cos(endAngle);
+          const y2 = center + radius * Math.sin(endAngle);
 
-        const largeArcFlag = endAngle - startAngle <= Math.PI ? "0" : "1";
+          const largeArcFlag = endAngle - startAngle <= Math.PI ? "0" : "1";
 
-        const pathD = [
-          `M ${center},${center}`,
-          `L ${x1},${y1}`,
-          `A ${radius},${radius} 0 ${largeArcFlag} 1 ${x2},${y2}`,
-          "Z"
-        ].join(" ");
+          const pathD = [
+            `M ${center},${center}`,
+            `L ${x1},${y1}`,
+            `A ${radius},${radius} 0 ${largeArcFlag} 1 ${x2},${y2}`,
+            "Z"
+          ].join(" ");
 
-        const textAngle = (startAngle + endAngle) / 2;
-        const textRadius = radius * 0.7;
-        const textX = center + textRadius * Math.cos(textAngle);
-        const textY = center + textRadius * Math.sin(textAngle);
+          const textAngle = (startAngle + endAngle) / 2;
+          const textRadius = radius * 0.7;
+          const textX = center + textRadius * Math.cos(textAngle);
+          const textY = center + textRadius * Math.sin(textAngle);
 
-        return (
-          <g
-            key={emotion.name}
-            onClick={() => onEmotionToggle(emotion.name)}
-            ref={(el) => {
-              emotionRefs.current[index] = el;
-              if (emotion.name === 'Anger') {
-                if (el) {
-                  angerEmotionRef.current = [el];
+          return (
+            <g
+              key={emotion.name}
+              onClick={() => {
+                onEmotionToggle(emotion.name);
+                setLastSelectedEmotion(emotion.name);
+                if (announcementRef.current) {
+                  announcementRef.current.textContent = `${emotion.name} ${selectedEmotions.includes(emotion.name) ? 'deselected' : 'selected'}`;
                 }
-              }
-            }}
-            tabIndex={-1}
-            onKeyDown={(e) => handleKeyDown(e, index)}
-            onFocus={() => handleFocus(index)}
-            onBlur={handleBlur}
-          >
-            <path
-              d={pathD}
-              fill={emotion.color}
-              stroke="white"
-              strokeWidth="1"
-              className={`emotion-segment ${selectedEmotions.includes(emotion.name) ? 'selected' : ''} ${keyboardFocusedIndex === index ? 'keyboard-focused' : ''}`}
-            />
-            <text
-              x={textX}
-              y={textY}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              className="emotion-name"
+              }}
+              ref={(el) => {
+                emotionRefs.current[index] = el;
+                if (emotion.name === 'Anger') {
+                  if (el) {
+                    angerEmotionRef.current = [el];
+                  }
+                }
+              }}
+              tabIndex={-1}
+              onKeyDown={(e) => handleKeyDown(e, index)}
+              onFocus={() => handleFocus(index)}
+              onBlur={handleBlur}
             >
-              {emotion.name}
-            </text>
-          </g>
-        );
-      })}
-    </svg>
+              <path
+                d={pathD}
+                fill={emotion.color}
+                stroke="white"
+                strokeWidth="1"
+                className={`emotion-segment ${selectedEmotions.includes(emotion.name) ? 'selected' : ''} ${keyboardFocusedIndex === index ? 'keyboard-focused' : ''} ${lastSelectedEmotion === emotion.name ? 'last-selected' : ''}`}
+              />
+              <text
+                x={textX}
+                y={textY}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                className="emotion-name"
+              >
+                {emotion.name}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+      <div 
+        ref={announcementRef} 
+        aria-live="polite" 
+        className="visually-hidden"
+      ></div>
+      <div className="selected-emotions-pills">
+        {selectedEmotions.map((emotion) => (
+          <span key={emotion} className="emotion-pill" style={{ backgroundColor: EMOTIONS.find(e => e.name === emotion)?.color }}>
+            {emotion}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }

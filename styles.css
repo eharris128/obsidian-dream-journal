@@ -100,7 +100,7 @@
 }
 
 .emotion-segment.selected.keyboard-focused {
-    stroke: #FFD700; /* Gold color */
+    stroke: #FFD700;
     stroke-width: 4;
     filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 3px rgba(0, 0, 0, 0.5));
 }
@@ -110,12 +110,6 @@
     fill: #000;
     pointer-events: none;
 }
-
-/* .emotion-segment.last-selected {
-    stroke: #000;
-    stroke-width: 3;
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
-} */
 
 .visually-hidden {
     position: absolute;
@@ -127,4 +121,29 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+}
+
+.emotion-wheel-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.selected-emotions-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.emotion-pill {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #000000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
