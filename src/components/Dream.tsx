@@ -6,24 +6,30 @@ import { moment } from 'obsidian';
 const DREAM_JOURNAL_DIR = 'dream-journal';
 const DREAMS_DIR = `${DREAM_JOURNAL_DIR}/dreams`;
 
+interface DreamEntry {
+  title: string;
+  content: string;
+}
+
 export const Dream: React.FC = () => {
-    const [dreams, setDreams] = useState<string[]>([]);
+    const [dreams, setDreams] = useState<DreamEntry[]>([]);
     const app = useApp();
 
-    const handleNewDream = async (dreamContent: string) => {
+    const handleNewDream = async (dreamTitle: string, dreamContent: string) => {
         if (!app) {
             console.error('Obsidian app is not available');
             return;
         }
 
         const { vault } = app;
-        const fileName = `Dream-${moment().format('YYYY-MM-DD-HHmmss')}.md`;
+        const fileName = `${dreamTitle}-${moment().format('YYYY-MM-DD-HHmmss')}.md`;
         const filePath = `${DREAMS_DIR}/${fileName}`;
+        const fileContent = `# ${dreamTitle}\n\n${dreamContent}`;
 
         try {
             // Create the file
-            await vault.create(filePath, dreamContent);
-            setDreams([...dreams, dreamContent]);
+            await vault.create(filePath, fileContent);
+            setDreams([...dreams, { title: dreamTitle, content: dreamContent }]);
         } catch (error) {
             console.error('Failed to save dream:', error);
         }
@@ -36,7 +42,10 @@ export const Dream: React.FC = () => {
             <h2>Your Dreams:</h2>
             <ul>
                 {dreams.map((dream, index) => (
-                    <li key={index}>{dream}</li>
+                    <li key={index}>
+                        <h3>{dream.title}</h3>
+                        <p>{dream.content}</p>
+                    </li>
                 ))}
             </ul>
         </div>
