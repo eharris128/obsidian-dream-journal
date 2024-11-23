@@ -21,6 +21,10 @@ export class ReactView extends ItemView {
         return this.displayText;
     }
 
+    getIcon(): string {
+        return 'moon';
+    }
+
     async onOpen() {
         const { containerEl } = this;
         this.root = createRoot(containerEl);
