@@ -90,6 +90,7 @@
 .emotion-segment.selected {
     stroke: #000;
     stroke-width: 2;
+    stroke-width: 3;
 }
 
 .emotion-segment.keyboard-focused {
@@ -98,8 +99,32 @@
     filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
 }
 
+.emotion-segment.selected.keyboard-focused {
+    stroke: #FFD700; /* Gold color */
+    stroke-width: 4;
+    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 3px rgba(0, 0, 0, 0.5));
+}
+
 .emotion-name {
     font-size: 16px;
     fill: #000;
     pointer-events: none;
+}
+
+/* .emotion-segment.last-selected {
+    stroke: #000;
+    stroke-width: 3;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+} */
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }

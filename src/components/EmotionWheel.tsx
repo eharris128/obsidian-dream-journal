@@ -168,4 +168,4 @@ export const EmotionWheel: React.FC<EmotionWheelProps> = ({
       })}
     </svg>
   );
-};
+}
