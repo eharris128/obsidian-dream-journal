@@ -71,3 +71,29 @@
     cursor: pointer;
     transition: all 0.3s ease;
 }
+
+/* Emotion Wheel Styles */
+.emotion-wheel {
+    display: block;
+    margin: 20px auto;
+}
+
+.emotion-segment {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.emotion-segment:hover {
+    opacity: 0.8;
+}
+
+.emotion-segment.selected {
+    stroke: #000;
+    stroke-width: 2;
+}
+
+.emotion-name {
+    font-size: 16px;
+    fill: #000;
+    pointer-events: none;
+}

@@ -1,15 +1,9 @@
 import { useState, useEffect } from 'react';
+import { EmotionWheel } from './EmotionWheel';
 
 interface NewDreamProps {
   onSubmit: (dreamTitle: string, dreamContent: string, emotions: string[]) => void;
 }
-
-const EMOTIONS = [
-  'Joy', 'Trust', 'Fear', 'Surprise', 'Sadness', 'Disgust', 'Anger', 'Anticipation',
-  'Ecstasy', 'Admiration', 'Terror', 'Amazement', 'Grief', 'Loathing', 'Rage', 'Vigilance',
-  'Serenity', 'Acceptance', 'Apprehension', 'Distraction', 'Pensiveness', 'Boredom', 'Annoyance', 'Interest',
-  'Love', 'Submission', 'Awe', 'Disapproval', 'Remorse', 'Contempt', 'Aggressiveness', 'Optimism'
-];
 
 export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
   const [dreamTitle, setDreamTitle] = useState('');
@@ -67,19 +61,8 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
         />
       </div>
       <div className="form-group">
-        <label>Emotions felt <span className="required">*</span></label>
-        <div className="emotions-container">
-          {EMOTIONS.map(emotion => (
-            <button
-              key={emotion}
-              type="button"
-              className={`emotion-button ${selectedEmotions.includes(emotion) ? 'selected' : ''}`}
-              onClick={() => handleEmotionToggle(emotion)}
-            >
-              {emotion}
-            </button>
-          ))}
-        </div>
+        <label>Emotions felt</label>
+        <EmotionWheel selectedEmotions={selectedEmotions} onEmotionToggle={handleEmotionToggle} />
       </div>
       <button 
         id="submit-dream"
