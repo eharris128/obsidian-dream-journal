@@ -11,7 +11,7 @@ interface EmotionWheelProps {
 const EMOTIONS = [
   { name: 'Joy', color: '#FFFF00' },
   { name: 'Trust', color: '#98FB98' },
-  { name: 'Fear', color: '#90EE90' },
+  { name: 'Fear', color: '#228B22' },
   { name: 'Surprise', color: '#00FFFF' },
   { name: 'Sadness', color: '#4169E1' },
   { name: 'Disgust', color: '#9370DB' },

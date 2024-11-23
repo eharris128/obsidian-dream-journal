@@ -29,7 +29,7 @@ export class ReactView extends ItemView {
         const { containerEl } = this;
         containerEl.empty();
 
-        const contentContainer = containerEl.createDiv({ cls: 'react-view-content' });
+        const contentContainer = containerEl.createDiv({ cls: 'dream-journal-view' });
         this.root = createRoot(contentContainer);
         this.root.render(
             <AppContext.Provider value={this.app}>
