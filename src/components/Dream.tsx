@@ -37,9 +37,9 @@ export const Dream: React.FC = () => {
 
     return (
         <div>
-            <h1>Dream Journal</h1>
+            <h1>What did I dream about?</h1>
             <NewDream onSubmit={handleNewDream} />
-            <h2>Your Dreams:</h2>
+            <h2>Previous dreams:</h2>
             <ul>
                 {dreams.map((dream, index) => (
                     <li key={index}>
