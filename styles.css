@@ -55,3 +55,19 @@
 .dream-journal-submit-button {
     width: 8rem;
 }
+
+/* Emotion buttons */
+.dream-journal-new-dream-form .emotion-button.selected {
+    background-color: var(--interactive-accent);
+    color: var(--text-on-accent);
+    border-color: var(--interactive-accent);
+}
+
+.dream-journal-new-dream-form .emotion-button {
+    padding: 5px 10px;
+    background-color: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
