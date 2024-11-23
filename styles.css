@@ -107,7 +107,7 @@
     pointer-events: none;
 }
 
-.visually-hidden {
+.emotion-visually-hidden {
     position: absolute;
     width: 1px;
     height: 1px;

@@ -181,10 +181,10 @@ export const EmotionWheel: React.FC<EmotionWheelProps> = ({
           );
         })}
       </svg>
-      <div 
-        ref={announcementRef} 
-        aria-live="polite" 
-        className="visually-hidden"
+      <div
+        ref={announcementRef}
+        aria-live="polite"
+        className="emotion-visually-hidden"
       ></div>
       <div className="selected-emotions-pills">
         {selectedEmotions.map((emotion) => (

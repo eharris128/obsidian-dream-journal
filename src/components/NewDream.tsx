@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { EmotionWheel } from './EmotionWheel';
+import { EmotionWheel } from '@/components/EmotionWheel';
 
 interface NewDreamProps {
   onSubmit: (dreamTitle: string, dreamContent: string, emotions: string[]) => void;

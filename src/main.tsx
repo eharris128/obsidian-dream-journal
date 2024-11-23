@@ -65,7 +65,6 @@ export default class DreamJournalPlugin extends Plugin {
             hotkeys: []
         });
 
-        // Add settings tab
         this.addSettingTab(new DreamJournalSettingTab(this.app, this));
 
         await this.createDreamJournalDirectories();
