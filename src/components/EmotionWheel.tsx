@@ -1,6 +1,9 @@
 interface EmotionWheelProps {
   selectedEmotions: string[];
   onEmotionToggle: (emotion: string) => void;
+  angerEmotionRef: React.RefObject<SVGGElement>;
+  onTabPress: () => void;
+  onShiftTabPress: () => void;
 }
 
 const EMOTIONS = [
@@ -14,10 +17,28 @@ const EMOTIONS = [
   { name: 'Anticipation', color: '#FFA500' },
 ];
 
-export const EmotionWheel: React.FC<EmotionWheelProps> = ({ selectedEmotions, onEmotionToggle }) => {
+export const EmotionWheel: React.FC<EmotionWheelProps> = ({ 
+  selectedEmotions, 
+  onEmotionToggle, 
+  angerEmotionRef,
+  onTabPress,
+  onShiftTabPress,
+}) => {
   const size = 300;
   const center = size / 2;
   const radius = size / 2;
+
+  const handleKeyDown = (e: React.KeyboardEvent, emotion: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      onEmotionToggle(emotion);
+    } else if (e.key === 'Tab' && !e.shiftKey) {
+      e.preventDefault();
+      onTabPress();
+    } else if (e.key === 'Tab' && e.shiftKey) {
+      e.preventDefault();
+      onShiftTabPress();
+    }
+  };
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="emotion-wheel">
@@ -43,8 +64,17 @@ export const EmotionWheel: React.FC<EmotionWheelProps> = ({ selectedEmotions, on
         const textX = center + textRadius * Math.cos(textAngle);
         const textY = center + textRadius * Math.sin(textAngle);
 
+        // Use the ref for the Anger emotion
+        const ref = emotion.name === 'Anger' ? angerEmotionRef : undefined;
+
         return (
-          <g key={emotion.name} onClick={() => onEmotionToggle(emotion.name)}>
+          <g
+            key={emotion.name}
+            onClick={() => onEmotionToggle(emotion.name)}
+            ref={ref}
+            tabIndex={0}
+            onKeyDown={(e) => handleKeyDown(e, emotion.name)}  // Use the new handleKeyDown function
+          >
             <path
               d={pathD}
               fill={emotion.color}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { EmotionWheel } from './EmotionWheel';
 
 interface NewDreamProps {
@@ -11,6 +11,9 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
   const [selectedEmotions, setSelectedEmotions] = useState<string[]>([]);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const angerEmotionRef = useRef<SVGGElement>(null);
+  const saveDreamButtonRef = useRef<HTMLButtonElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     setIsFormValid(dreamTitle.trim() !== '' && dreamContent.trim() !== '');
@@ -20,7 +23,7 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
     e.preventDefault();
     setIsSubmitted(true);
     if (isFormValid) {
-      const emotionsSection = selectedEmotions.length > 0 
+      const emotionsSection = selectedEmotions.length > 0
         ? `\n\n# I felt:)\n${selectedEmotions.join(', ')}`
         : '';
       const fullDreamContent = `${dreamContent}${emotionsSection}`;
@@ -33,12 +36,27 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
   };
 
   const handleEmotionToggle = (emotion: string) => {
-    setSelectedEmotions(prev => 
-      prev.includes(emotion) 
-        ? prev.filter(e => e !== emotion) 
+    setSelectedEmotions(prev =>
+      prev.includes(emotion)
+        ? prev.filter(e => e !== emotion)
         : [...prev, emotion]
     );
   };
+
+  const handleTextareaKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Tab' && !e.shiftKey) {
+      e.preventDefault();
+      angerEmotionRef.current?.focus();
+    }
+  };
+
+  const handleEmotionWheelTabPress = () => {
+    saveDreamButtonRef.current?.focus();
+  };
+
+  const handleEmotionWheelShiftTabPress = () => {
+    descriptionRef.current?.focus();
+  }
 
   return (
     <form onSubmit={handleSubmit} className="dream-journal-new-dream-form">
@@ -59,20 +77,29 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
           id="dream-content"
           value={dreamContent}
           onChange={(e) => setDreamContent(e.target.value)}
+          onKeyDown={handleTextareaKeyDown}
           placeholder="Describe your dream..."
           rows={4}
           required
+          ref={descriptionRef}
         />
       </div>
       <div className="form-group">
         <label>I felt:</label>
-        <EmotionWheel selectedEmotions={selectedEmotions} onEmotionToggle={handleEmotionToggle} />
+        <EmotionWheel
+          selectedEmotions={selectedEmotions}
+          onEmotionToggle={handleEmotionToggle}
+          angerEmotionRef={angerEmotionRef}
+          onTabPress={handleEmotionWheelTabPress}
+          onShiftTabPress={handleEmotionWheelShiftTabPress}
+        />
       </div>
-      <button 
+      <button
         id="submit-dream"
-        className="dream-journal-submit-button" 
-        type="submit" 
+        className="dream-journal-submit-button"
+        type="submit"
         disabled={!isFormValid}
+        ref={saveDreamButtonRef}
       >
         Save dream
       </button>
