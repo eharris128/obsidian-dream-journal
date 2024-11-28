@@ -2,8 +2,6 @@
 
 <img src="amor.png" alt="Obsidian Dream Journal" max-height="712">
 
-<!-- ![Dream Journal Main View]() -->
-
 The Dream Journal plugin allows you to record and analyze your dreams directly within Obsidian. Capture dream details, associate emotions, and keep track of your dream experiences over time.
 
 Mobile support:
