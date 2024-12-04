@@ -29,6 +29,11 @@ Mobile support:
 3. Use the emotion wheel to select emotions associated with your dream
 4. Click "Save dream" to record your entry
 
+## Upcoming features
+- Indicate whether or not there was any dream recall for a night.
+- Add options to collect lucidity data
+- Support exporting dreams bucketed by date range.
+
 ## Development
 
 This plugin is built using TypeScript and React. To set up the development environment:
