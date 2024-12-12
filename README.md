@@ -34,6 +34,11 @@ Mobile support:
 - Add options to collect lucidity data
 - Support exporting dreams bucketed by date range.
 
+## Speculative features
+- Dream sign collection
+- LuCiD question collection, subsequent analysis. [Initial study](https://www.blogs.uni-mainz.de/fb05philosophie/files/2013/04/Voss-et-al-2013_Measuring-Consciousness-in-Dreams.pdf) by Voss et al 2013
+- Dream lucidity questionnaire by [Stumbrys et al 2013](https://boris.unibe.ch/40302/1/11137-17819-2-PB.pdf)
+
 ## Development
 
 This plugin is built using TypeScript and React. To set up the development environment:
