@@ -2,13 +2,15 @@ import { useState, useEffect, useRef } from 'react';
 import { EmotionWheel } from '@/components/EmotionWheel';
 
 interface NewDreamProps {
-  onSubmit: (dreamTitle: string, dreamContent: string, emotions: string[]) => void;
+  onSubmit: (dreamTitle: string, dreamContent: string, emotions: string[], people: string[]) => void;
 }
 
 export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
   const [dreamTitle, setDreamTitle] = useState('');
   const [dreamContent, setDreamContent] = useState('');
   const [selectedEmotions, setSelectedEmotions] = useState<string[]>([]);
+  const [people, setPeople] = useState<string[]>([]);
+  const [newPerson, setNewPerson] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const angerEmotionRef = useRef<(SVGGElement | null)[]>([]);
@@ -26,11 +28,16 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
       const emotionsSection = selectedEmotions.length > 0
         ? `\n\n# I felt:\n${selectedEmotions.join(', ')}`
         : '';
-      const fullDreamContent = `${dreamContent}${emotionsSection}`;
-      onSubmit(dreamTitle, fullDreamContent, selectedEmotions);
+      const peopleSection = people.length > 0
+        ? `\n\n# People:\n- ${people.join('\n- ')}`
+        : '';
+      const fullDreamContent = `${dreamContent}${emotionsSection}${peopleSection}`;
+      onSubmit(dreamTitle, fullDreamContent, selectedEmotions, people);
       setDreamTitle('');
       setDreamContent('');
       setSelectedEmotions([]);
+      setPeople([]);
+      setNewPerson('');
       setIsSubmitted(false);
     }
   };
@@ -57,6 +64,13 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
   const handleEmotionWheelShiftTabPress = () => {
     descriptionRef.current?.focus();
   }
+
+  const handleAddPerson = () => {
+    if (newPerson.trim() !== '') {
+      setPeople(prev => [...prev, newPerson.trim()]);
+      setNewPerson('');
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="dream-journal-new-dream-form">
@@ -94,6 +108,23 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
           onShiftTabPress={handleEmotionWheelShiftTabPress}
         />
       </div>
+      <div className="form-group">
+        <label>Significant people present in the dream:</label>
+        <input
+          className="dream-journal-people-input"
+          type="text"
+          value={newPerson}
+          onChange={(e) => setNewPerson(e.target.value)}
+          placeholder="Enter person's name..."
+          onKeyDown={(e) => { if (e.key === 'Enter') handleAddPerson(); }}
+        />
+        <button type="button" onClick={handleAddPerson}>Add</button>
+        <div className="people-bubbles">
+          {people.map((person, index) => (
+            <span key={index} className="bubble">{person}</span>
+          ))}
+        </div>
+      </div>
       <button
         id="submit-dream"
         className="dream-journal-submit-button"
@@ -101,7 +132,7 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
         disabled={!isFormValid}
         ref={saveDreamButtonRef}
       >
-        Save dream
+        Save dreams!
       </button>
     </form>
   );
