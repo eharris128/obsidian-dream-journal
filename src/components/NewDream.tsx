@@ -143,7 +143,7 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
         disabled={!isFormValid}
         ref={saveDreamButtonRef}
       >
-        Save dreams!
+        Save dream
       </button>
     </form>
   );
