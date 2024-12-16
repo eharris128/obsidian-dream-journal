@@ -1,13 +1,16 @@
 import { App, Plugin, PluginSettingTab } from 'obsidian';
 import { StrictMode } from 'react';
 import { createRoot, Root } from 'react-dom/client';
+// import "react-datepicker/dist/react-datepicker.css";
 
 import { AppContext } from '@/context';
 import { TabView } from '@/views/TabView';
 import { SettingsView } from '@/views/SettingsView';
 import { ReactView } from '@/views/ReactView';
+import { DreamExport } from '@/components/DreamExport';
 
 const DREAM_JOURNAL_TAB = 'dream-journal-tab-view';
+const DREAM_EXPORT_TAB = 'dream-export-tab-view';
 const DREAM_JOURNAL_DIR = 'dream-journal';
 const DREAMS_DIR = `${DREAM_JOURNAL_DIR}/dreams`;
 
@@ -44,12 +47,18 @@ class DreamJournalSettingTab extends PluginSettingTab {
 
 const OPEN_DREAM_JOURNAL = 'Open dream journal';
 const RECORD_DREAMS = 'Record dreams';
+const EXPORT_DREAMS = 'Export dreams';
 
 export default class DreamJournalPlugin extends Plugin {
     async onload() {
         this.registerView(
             DREAM_JOURNAL_TAB,
             (leaf) => new ReactView(leaf, TabView, DREAM_JOURNAL_TAB, RECORD_DREAMS)
+        );
+
+        this.registerView(
+            DREAM_EXPORT_TAB,
+            (leaf) => new ReactView(leaf, DreamExport, DREAM_EXPORT_TAB, EXPORT_DREAMS)
         );
 
         this.addRibbonIcon('moon', OPEN_DREAM_JOURNAL, () => {
@@ -60,7 +69,16 @@ export default class DreamJournalPlugin extends Plugin {
             id: 'open-dream-journal',
             name: RECORD_DREAMS,
             callback: () => {
-                this.activateView();
+                this.activateView(DREAM_JOURNAL_TAB);
+            },
+            hotkeys: []
+        });
+
+        this.addCommand({
+            id: 'open-dream-exporter',
+            name: EXPORT_DREAMS,
+            callback: () => {
+                this.activateView(DREAM_EXPORT_TAB);
             },
             hotkeys: []
         });
@@ -80,14 +98,14 @@ export default class DreamJournalPlugin extends Plugin {
         }
     }
 
-    async activateView() {
+    async activateView(viewType: string = DREAM_JOURNAL_TAB) {
         const { workspace } = this.app;
 
-        let leaf = workspace.getLeavesOfType(DREAM_JOURNAL_TAB)[0];
+        let leaf = workspace.getLeavesOfType(viewType)[0];
         if (!leaf) {
             leaf = workspace.getLeaf(false);
             await leaf.setViewState({
-                type: DREAM_JOURNAL_TAB,
+                type: viewType,
                 active: true,
             });
         }
