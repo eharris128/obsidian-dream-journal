@@ -72,6 +72,10 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
     }
   };
 
+  const handleRemovePerson = (personToRemove: string) => {
+    setPeople(prev => prev.filter(person => person !== personToRemove));
+  };
+
   return (
     <form onSubmit={handleSubmit} className="dream-journal-new-dream-form">
       <div className="form-group">
@@ -121,7 +125,14 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
         <button type="button" onClick={handleAddPerson}>Add</button>
         <div className="people-bubbles">
           {people.map((person, index) => (
-            <span key={index} className="bubble">{person}</span>
+            <span key={index} className="bubble">
+              {person}
+              <span className="remove-person" onClick={() => handleRemovePerson(person)}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
+                  <path fillRule="evenodd" d="M1.5 1.5a.5.5 0 0 1 .707 0L8 7.293 14.793 1.5a.5.5 0 1 1 .707.707L8.707 8l6.793 6.793a.5.5 0 0 1-.707.707L8 8.707 1.5 15.5a.5.5 0 0 1-.707-.707L7.293 8 1.5 1.5z"/>
+                </svg>
+              </span>
+            </span>
           ))}
         </div>
       </div>

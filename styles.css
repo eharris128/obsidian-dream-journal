@@ -221,3 +221,12 @@
     display: inline-block;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.remove-person {
+    margin-left: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    &:hover {
+        color: var(--text-error);
+    }
+}
