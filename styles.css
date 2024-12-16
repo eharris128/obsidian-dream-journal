@@ -167,3 +167,66 @@
 .dream-journal-view::-webkit-scrollbar-thumb:hover {
     background-color: var(--background-modifier-border-hover);
 }
+
+/* styles.css */
+
+/* Style for the form group */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Input field for entering names */
+.form-group input[type="text"] {
+    width: 200px; /* Adjust width to leave space for the button */
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.dream-journal-people-input {
+    margin: 8px 0 12px 0;
+}
+
+/* Button for adding names */
+.form-group button {
+    padding: 0.5rem 1rem;
+    margin-left: 10px;
+    width: 80px;
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.form-group button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Style for the bubbles */
+.people-bubbles {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.bubble {
+	background-color: var(--background-secondary);
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    margin: 0.25rem;
+    font-size: 0.9rem;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.remove-person {
+    margin-left: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    &:hover {
+        color: var(--text-error);
+    }
+}
