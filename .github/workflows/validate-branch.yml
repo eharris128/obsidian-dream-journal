@@ -1,0 +1,23 @@
+name: Validate Release Branch
+
+on:
+  workflow_call:
+    outputs:
+      is_valid:
+        description: "Whether the branch name is valid"
+        value: ${{ jobs.validate.outputs.is_valid }}
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    outputs:
+      is_valid: ${{ steps.validate_step.outputs.is_valid }}
+    steps:
+      - name: Check branch name pattern
+        id: validate_step
+        run: |
+          if [[ "${{ github.event.pull_request.head.ref }}" =~ ^release/[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "is_valid=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_valid=false" >> $GITHUB_OUTPUT
+          fi
