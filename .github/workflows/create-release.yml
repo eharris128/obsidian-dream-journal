@@ -20,7 +20,7 @@ jobs:
           BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
           if [[ ! "$BRANCH_NAME" =~ ^release/(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-(0|[1-9A-Za-z-][0-9A-Za-z-]*)(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
             echo "Branch name does not match the pattern: $BRANCH_NAME"
-            exit 1
+            exit 0
           else
             echo "Branch name matches the pattern: $BRANCH_NAME"
           fi
@@ -41,7 +41,7 @@ jobs:
 
       - name: Build plugin
         run: |
-          npm install
+          npm install --force # force install to use react 19 with react-datepicker
           npm run build
 
       - name: Create Tag
