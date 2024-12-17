@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-dream-journal",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "Record dreams.",
 	"main": "main.js",
 	"scripts": {
