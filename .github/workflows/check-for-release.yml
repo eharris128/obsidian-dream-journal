@@ -1,4 +1,4 @@
-name: Create Release
+name: Check for release
 
 on:
   pull_request:
@@ -13,6 +13,7 @@ jobs:
 
   create-release:
     needs: validate-branch
+    # IDE throws a warning, but the context reference is valid.
     if: |
       github.event.pull_request.merged == true &&
       needs.validate-branch.outputs.is_valid == 'true'
