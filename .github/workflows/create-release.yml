@@ -8,23 +8,19 @@ on:
       - master
 
 jobs:
+  validate-branch:
+    uses: ./.github/workflows/validate-branch.yml
+
   create-release:
+    needs: validate-branch
+    if: |
+      github.event.pull_request.merged == true &&
+      needs.validate-branch.outputs.is_valid == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    if: github.event.pull_request.merged == true
 
     steps:
-      - name: Check branch name pattern
-        run: |
-          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
-          if [[ ! "$BRANCH_NAME" =~ ^release/(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-(0|[1-9A-Za-z-][0-9A-Za-z-]*)(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
-            echo "Branch name does not match the pattern: $BRANCH_NAME"
-            exit 0
-          else
-            echo "Branch name matches the pattern: $BRANCH_NAME"
-          fi
-
       - name: Checkout code
         uses: actions/checkout@v3
         with:
