@@ -41,7 +41,7 @@ jobs:
 
       - name: Build plugin
         run: |
-          npm install
+          npm install --force # force install to use react 19 with react-datepicker
           npm run build
 
       - name: Create Tag
