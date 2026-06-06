@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NewDream } from '@/components/NewDream';
 import { useApp } from '@/hooks/useApp';
-import { moment } from 'obsidian';
+import { format } from 'date-fns';
 
 const DREAM_JOURNAL_DIR = 'dream-journal';
 const DREAMS_DIR = `${DREAM_JOURNAL_DIR}/dreams`;
@@ -23,7 +23,7 @@ export const Dream: React.FC = () => {
         }
 
         const { vault } = app;
-        const fileName = `${dreamTitle}-${moment().format('YYYY-MM-DD-HHmmss')}.md`;
+        const fileName = `${dreamTitle}-${format(new Date(), 'yyyy-MM-dd-HHmmss')}.md`;
         const filePath = `${DREAMS_DIR}/${fileName}`;
 
         try {

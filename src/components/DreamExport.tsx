@@ -88,7 +88,7 @@ export const DreamExport: React.FC = () => {
         selectsEnd
         startDate={startDate ?? undefined}
         endDate={endDate ?? undefined}
-        minDate={startDate ?? null}
+        minDate={startDate ?? undefined}
         placeholderText="End Date"
         className="date-picker"
         dateFormat="MM/dd/yyyy"
