@@ -92,7 +92,7 @@ export default class DreamJournalPlugin extends Plugin {
         });
 
         this.addCommand({
-            id: 'open-dream-journal',
+            id: 'open-journal',
             name: RECORD_DREAMS,
             callback: () => {
                 this.activateView(DREAM_JOURNAL_TAB);
@@ -101,7 +101,7 @@ export default class DreamJournalPlugin extends Plugin {
         });
 
         this.addCommand({
-            id: 'open-dream-exporter',
+            id: 'open-exporter',
             name: EXPORT_DREAMS,
             callback: () => {
                 this.activateView(DREAM_EXPORT_TAB);

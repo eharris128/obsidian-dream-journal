@@ -58,5 +58,5 @@ Distilled from https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines — 
 - The dreams folder is a user setting: `plugin.settings.dreamsDir` (default `DEFAULT_DREAMS_DIR` in `src/constants.ts`), persisted to `data.json` (gitignored) via `loadData`/`saveData`. Never hardcode vault paths — read the setting at action time and call `plugin.ensureDreamsFolder()` before writing files into it.
 - React reaches the plugin instance via `PluginContext` + `usePlugin()` (provided by both `ReactView` and the setting tab). The manifest comes from `usePluginManifest()` → `plugin.manifest` — never from `app.plugins`.
 - The setting tab mixes native `Setting` controls (top) with the React `SettingsView` footer (bottom) — add new settings as native `Setting` rows, not React inputs.
-- `manifest.json` `minAppVersion` is `1.5.7` (required by `Vault.getFolderByPath`) — bump it again if you adopt newer APIs.
+- `manifest.json` `minAppVersion` is `1.7.2` (aligned with the large-language-models plugin; the hard API floor is 1.5.7 for `Vault.getFolderByPath`) — bump it again if you adopt newer APIs.
 - Release checklist: `manifest.json` version must match the git tag; update `versions.json`.

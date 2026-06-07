@@ -1,7 +1,7 @@
 {
 	"name": "obsidian-dream-journal",
 	"version": "0.0.4",
-	"description": "Record dreams.",
+	"description": "Record your dreams to promote dream retention, enhance lucidity, and go deeper into dreaming.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",

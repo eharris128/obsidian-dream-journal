@@ -2,9 +2,10 @@
 	"id": "dream-journal",
 	"name": "Dream Journal",
 	"version": "0.0.4", 
-	"minAppVersion": "1.5.7",
-	"description": "Record dreams.",
+	"minAppVersion": "1.7.2",
+	"description": "Record your dreams to promote dream retention, enhance lucidity, and go deeper into dreaming.",
 	"author": "eharris128",
 	"authorUrl": "https://bsky.app/profile/evanharris.bsky.social",
+	"fundingUrl": "https://github.com/sponsors/eharris128",
 	"isDesktopOnly": false
 }
