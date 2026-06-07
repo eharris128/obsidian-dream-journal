@@ -37,7 +37,7 @@ Mobile support:
 ## Speculative features
 - Dream sign collection
 - LuCiD question collection, subsequent analysis. [Initial study](https://www.blogs.uni-mainz.de/fb05philosophie/files/2013/04/Voss-et-al-2013_Measuring-Consciousness-in-Dreams.pdf) by Voss et al 2013
-- Dream lucidity questionnaire by [Stumbrys et al 2013](https://boris.unibe.ch/40302/1/11137-17819-2-PB.pdf)
+- Lucid dream and nightmare frequency scales by [Stumbrys et al 2013](https://doi.org/10.11588/ijodr.2013.2.11137)
 - Supplement induction review questions 
 
 ## Development
