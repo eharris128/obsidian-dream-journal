@@ -2,7 +2,8 @@ import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import jsPDF from 'jspdf';
 import { format } from 'date-fns';
-import { useApp } from '@/hooks/useApp';
+import { Notice, TFile } from 'obsidian';
+import { usePlugin } from '@/hooks/usePlugin';
 
 interface Dream {
   date: Date;
@@ -13,15 +14,21 @@ interface Dream {
 export const DreamExport: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const app = useApp();
+  const plugin = usePlugin();
 
   const exportToPDF = async () => {
     if (!startDate || !endDate) return;
 
-    if (!app) return;
-    const vault = app.vault;
-    const dreamFiles = await vault.getFiles()
-      .filter(file => file.path.startsWith('dream-journal/dreams/')) // TODO: make this dynamic
+    if (!plugin) return;
+    const vault = plugin.app.vault;
+    const dreamsFolder = vault.getFolderByPath(plugin.settings.dreamsDir);
+    if (!dreamsFolder) {
+      new Notice('No dreams folder found');
+      return;
+    }
+
+    const dreamFiles = dreamsFolder.children
+      .filter((file): file is TFile => file instanceof TFile && file.extension === 'md')
       .filter(file => {
         const fileDate = new Date(file.stat.ctime);
         const isInRange = fileDate >= startDate && fileDate <= endDate;
@@ -30,7 +37,7 @@ export const DreamExport: React.FC = () => {
 
     const dreams: Dream[] = await Promise.all(
       dreamFiles.map(async file => {
-        const content = await vault.read(file);
+        const content = await vault.cachedRead(file);
         return {
           date: new Date(file.stat.ctime),
           title: file.basename,
@@ -77,7 +84,7 @@ export const DreamExport: React.FC = () => {
         selectsStart
         startDate={startDate ?? undefined}
         endDate={endDate ?? undefined}
-        placeholderText="Start Date"
+        placeholderText="Start date"
         className="date-picker"
         dateFormat="MM/dd/yyyy"
         icon={null}
@@ -89,7 +96,7 @@ export const DreamExport: React.FC = () => {
         startDate={startDate ?? undefined}
         endDate={endDate ?? undefined}
         minDate={startDate ?? undefined}
-        placeholderText="End Date"
+        placeholderText="End date"
         className="date-picker"
         dateFormat="MM/dd/yyyy"
         icon={null}

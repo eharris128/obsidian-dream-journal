@@ -2,13 +2,20 @@ import { StrictMode } from 'react';
 import { ItemView, WorkspaceLeaf } from 'obsidian';
 import { createRoot, Root } from 'react-dom/client';
 import type { ComponentType } from 'react';
-import { AppContext } from '@/context';
+import { AppContext, PluginContext } from '@/context';
+import type DreamJournalPlugin from '@/main';
 
 export class ReactView extends ItemView {
     root: Root | null = null;
     component: ComponentType;
 
-    constructor(leaf: WorkspaceLeaf, component: ComponentType, private viewType: string, private displayText: string) {
+    constructor(
+        leaf: WorkspaceLeaf,
+        component: ComponentType,
+        private viewType: string,
+        private displayText: string,
+        private plugin: DreamJournalPlugin
+    ) {
         super(leaf);
         this.component = component;
     }
@@ -33,9 +40,11 @@ export class ReactView extends ItemView {
         this.root = createRoot(contentContainer);
         this.root.render(
             <AppContext.Provider value={this.app}>
-                <StrictMode>
-                    <this.component />
-                </StrictMode>
+                <PluginContext.Provider value={this.plugin}>
+                    <StrictMode>
+                        <this.component />
+                    </StrictMode>
+                </PluginContext.Provider>
             </AppContext.Provider>
         );
     }
