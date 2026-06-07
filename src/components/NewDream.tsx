@@ -149,7 +149,7 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
           placeholder="Enter person's name..."
           onKeyDown={(e) => { if (e.key === 'Enter') handleAddPerson(); }}
         />
-        <button type="button" onClick={handleAddPerson}>Add</button>
+        <button type="button" className="dream-journal-add-person" onClick={handleAddPerson}>Add</button>
         <div className="people-bubbles">
           {people.map((person, index) => (
             <span key={index} className="bubble">
