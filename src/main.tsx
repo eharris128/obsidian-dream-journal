@@ -15,10 +15,12 @@ const DREAM_EXPORT_TAB = 'dream-export-tab-view';
 
 interface DreamJournalSettings {
     dreamsDir: string;
+    showLucidQuestionnaire: boolean;
 }
 
 const DEFAULT_SETTINGS: DreamJournalSettings = {
     dreamsDir: DEFAULT_DREAMS_DIR,
+    showLucidQuestionnaire: true,
 };
 
 class DreamJournalSettingTab extends PluginSettingTab {
@@ -43,6 +45,18 @@ class DreamJournalSettingTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.dreamsDir)
                     .onChange(async (value) => {
                         await this.plugin.updateDreamsDir(value);
+                    })
+            );
+
+        new Setting(containerEl)
+            .setName('Lucidity questionnaire')
+            .setDesc('Show the optional LuCiD scale (Voss et al. 2013) when recording a dream.')
+            .addToggle((toggle) =>
+                toggle
+                    .setValue(this.plugin.settings.showLucidQuestionnaire)
+                    .onChange(async (value) => {
+                        this.plugin.settings.showLucidQuestionnaire = value;
+                        await this.plugin.saveSettings();
                     })
             );
 

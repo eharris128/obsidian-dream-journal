@@ -1029,3 +1029,108 @@ h2.react-datepicker__current-month {
   vertical-align: -0.125em;
 }
 /* End of DatePicker styles */
+/* --- Lucidity questionnaire (LuCiD scale) --- */
+
+.lucid-section {
+    border-top: 1px solid var(--background-modifier-border);
+    padding-top: 0.75em;
+}
+
+.lucid-toggle {
+    align-items: baseline;
+    appearance: none;
+    background: none;
+    border: none;
+    box-shadow: none;
+    color: var(--text-normal);
+    cursor: pointer;
+    display: flex;
+    font-size: var(--font-ui-medium);
+    font-weight: 600;
+    gap: 0.5em;
+    height: auto;
+    margin: 0;
+    padding: 0.25em 0;
+    text-align: left;
+    user-select: none;
+    width: 100%;
+}
+
+.lucid-toggle:hover {
+    color: var(--text-accent);
+}
+
+.lucid-toggle-chevron {
+    flex-shrink: 0;
+    width: 1em;
+}
+
+.lucid-toggle-meta {
+    color: var(--text-muted);
+    font-size: var(--font-ui-smaller);
+    font-weight: 400;
+}
+
+.lucid-attribution,
+.lucid-scale-hint {
+    color: var(--text-muted);
+    font-size: var(--font-ui-smaller);
+    margin: 0.5em 0;
+}
+
+.lucid-items {
+    margin: 0;
+    padding-left: 1.5em;
+}
+
+.lucid-item {
+    margin-bottom: 0.85em;
+}
+
+.lucid-item-text {
+    display: block;
+    margin-bottom: 0.3em;
+}
+
+.lucid-item-scale {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em;
+}
+
+.lucid-scale-option {
+    align-items: center;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: var(--radius-s);
+    color: var(--text-muted);
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    min-width: 2em;
+    padding: 0.15em 0.5em;
+    user-select: none;
+}
+
+.lucid-scale-option input {
+    height: 0;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    width: 0;
+}
+
+.lucid-scale-option:hover {
+    border-color: var(--interactive-accent);
+    color: var(--text-normal);
+}
+
+.lucid-scale-option:focus-within {
+    box-shadow: 0 0 0 2px var(--background-modifier-border-focus);
+}
+
+.lucid-scale-option.is-selected {
+    background-color: var(--interactive-accent);
+    border-color: var(--interactive-accent);
+    color: var(--text-on-accent);
+}
