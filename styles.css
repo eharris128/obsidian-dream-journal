@@ -85,7 +85,6 @@
 
 .emotion-segment.selected {
     stroke: #000;
-    stroke-width: 2;
     stroke-width: 3;
 }
 
@@ -384,7 +383,7 @@ h2.react-datepicker__current-month {
   z-index: 1;
   height: 32px;
   width: 32px;
-  text-indent: -999em;
+  color: transparent;
   overflow: hidden;
 }
 .react-datepicker__navigation--previous {
@@ -1013,7 +1012,7 @@ h2.react-datepicker__current-month {
 
 .react-datepicker__aria-live {
   position: absolute;
-  clip-path: circle(0);
+  clip: rect(0, 0, 0, 0);
   border: 0;
   height: 1px;
   margin: -1px;

@@ -28,7 +28,6 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
   const [lucidResponses, setLucidResponses] = useState<(number | null)[]>(emptyLucidResponses);
   const [showLucid, setShowLucid] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const angerEmotionRef = useRef<(SVGGElement | null)[]>([]);
   const saveDreamButtonRef = useRef<HTMLButtonElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -37,9 +36,8 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
     setIsFormValid(dreamTitle.trim() !== '' && dreamContent.trim() !== '');
   }, [dreamTitle, dreamContent]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitted(true);
     if (isFormValid) {
       const emotionsSection = selectedEmotions.length > 0
         ? `\n\n# I felt:\n${selectedEmotions.join(', ')}`
@@ -62,7 +60,6 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
       setNewPerson('');
       setLucidResponses(emptyLucidResponses());
       setShowLucid(false);
-      setIsSubmitted(false);
     }
   };
 

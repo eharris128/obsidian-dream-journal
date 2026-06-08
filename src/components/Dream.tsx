@@ -55,7 +55,7 @@ export const Dream: React.FC = () => {
     return (
         <div>
             <h1>What did I dream about?</h1>
-            <NewDream onSubmit={handleNewDream} />
+            <NewDream onSubmit={(data) => void handleNewDream(data)} />
         </div>
     );
 };

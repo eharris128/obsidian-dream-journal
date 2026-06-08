@@ -3,7 +3,7 @@ import { useRef, useEffect, useState } from 'react';
 interface EmotionWheelProps {
   selectedEmotions: string[];
   onEmotionToggle: (emotion: string) => void;
-  angerEmotionRef: React.MutableRefObject<(SVGGElement | null)[]>;
+  angerEmotionRef: React.RefObject<(SVGGElement | null)[]>;
   onTabPress: () => void;
   onShiftTabPress: () => void;
 }
@@ -62,7 +62,7 @@ export const EmotionWheel: React.FC<EmotionWheelProps> = ({
     e.preventDefault();
     switch (e.key) {
       case 'Enter':
-      case ' ':
+      case ' ': {
         const emotion = EMOTIONS[emotionIndex].name;
         onEmotionToggle(emotion);
         setLastSelectedEmotion(emotion);
@@ -70,6 +70,7 @@ export const EmotionWheel: React.FC<EmotionWheelProps> = ({
           announcementRef.current.textContent = `${emotion} ${selectedEmotions.includes(emotion) ? 'selected' : 'deselected'}`;
         }
         break;
+      }
       case 'ArrowUp':
       case 'ArrowLeft':
         focusEmotion((emotionIndex - 1 + EMOTIONS.length) % EMOTIONS.length);

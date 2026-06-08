@@ -102,25 +102,23 @@ export default class DreamJournalPlugin extends Plugin {
         );
 
         this.addRibbonIcon('moon', OPEN_DREAM_JOURNAL, () => {
-            this.activateView();
+            void this.activateView();
         });
 
         this.addCommand({
             id: 'open-journal',
             name: RECORD_DREAMS,
             callback: () => {
-                this.activateView(DREAM_JOURNAL_TAB);
+                void this.activateView(DREAM_JOURNAL_TAB);
             },
-            hotkeys: []
         });
 
         this.addCommand({
             id: 'open-exporter',
             name: EXPORT_DREAMS,
             callback: () => {
-                this.activateView(DREAM_EXPORT_TAB);
+                void this.activateView(DREAM_EXPORT_TAB);
             },
-            hotkeys: []
         });
 
         this.addSettingTab(new DreamJournalSettingTab(this.app, this));
@@ -133,7 +131,8 @@ export default class DreamJournalPlugin extends Plugin {
     }
 
     async loadSettings() {
-        this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+        const data = (await this.loadData()) as Partial<DreamJournalSettings> | null;
+        this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
     }
 
     async saveSettings() {
