@@ -1109,6 +1109,9 @@ h2.react-datepicker__current-month {
     justify-content: center;
     min-width: 2em;
     padding: 0.15em 0.5em;
+    /* Contain the absolutely-positioned hidden radio so focusing it on click
+       doesn't scroll the page to a distant positioned ancestor. */
+    position: relative;
     user-select: none;
 }
 
