@@ -1,18 +1,34 @@
 import { useState, useEffect, useRef } from 'react';
 import { EmotionWheel } from '@/components/EmotionWheel';
+import { LucidQuestionnaire } from '@/components/LucidQuestionnaire';
+import { LUCID_ITEMS } from '@/lucid';
+import { usePlugin } from '@/hooks/usePlugin';
 
-interface NewDreamProps {
-  onSubmit: (dreamTitle: string, dreamContent: string, emotions: string[], people: string[]) => void;
+export interface NewDreamData {
+  title: string;
+  content: string;
+  emotions: string[];
+  people: string[];
+  lucidResponses: (number | null)[];
 }
 
+interface NewDreamProps {
+  onSubmit: (dream: NewDreamData) => void;
+}
+
+const emptyLucidResponses = (): (number | null)[] =>
+  Array.from({ length: LUCID_ITEMS.length }, () => null);
+
 export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
+  const plugin = usePlugin();
   const [dreamTitle, setDreamTitle] = useState('');
   const [dreamContent, setDreamContent] = useState('');
   const [selectedEmotions, setSelectedEmotions] = useState<string[]>([]);
   const [people, setPeople] = useState<string[]>([]);
   const [newPerson, setNewPerson] = useState('');
+  const [lucidResponses, setLucidResponses] = useState<(number | null)[]>(emptyLucidResponses);
+  const [showLucid, setShowLucid] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const angerEmotionRef = useRef<(SVGGElement | null)[]>([]);
   const saveDreamButtonRef = useRef<HTMLButtonElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -21,9 +37,8 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
     setIsFormValid(dreamTitle.trim() !== '' && dreamContent.trim() !== '');
   }, [dreamTitle, dreamContent]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitted(true);
     if (isFormValid) {
       const emotionsSection = selectedEmotions.length > 0
         ? `\n\n# I felt:\n${selectedEmotions.join(', ')}`
@@ -32,13 +47,20 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
         ? `\n\n# People:\n- ${people.join('\n- ')}`
         : '';
       const fullDreamContent = `${dreamContent}${emotionsSection}${peopleSection}`;
-      onSubmit(dreamTitle, fullDreamContent, selectedEmotions, people);
+      onSubmit({
+        title: dreamTitle,
+        content: fullDreamContent,
+        emotions: selectedEmotions,
+        people,
+        lucidResponses,
+      });
       setDreamTitle('');
       setDreamContent('');
       setSelectedEmotions([]);
       setPeople([]);
       setNewPerson('');
-      setIsSubmitted(false);
+      setLucidResponses(emptyLucidResponses());
+      setShowLucid(false);
     }
   };
 
@@ -75,6 +97,9 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
   const handleRemovePerson = (personToRemove: string) => {
     setPeople(prev => prev.filter(person => person !== personToRemove));
   };
+
+  const answeredCount = lucidResponses.filter((response) => response !== null).length;
+  const showLucidSection = plugin?.settings.showLucidQuestionnaire ?? true;
 
   return (
     <form onSubmit={handleSubmit} className="dream-journal-new-dream-form">
@@ -122,7 +147,7 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
           placeholder="Enter person's name..."
           onKeyDown={(e) => { if (e.key === 'Enter') handleAddPerson(); }}
         />
-        <button type="button" onClick={handleAddPerson}>Add</button>
+        <button type="button" className="dream-journal-add-person" onClick={handleAddPerson}>Add</button>
         <div className="people-bubbles">
           {people.map((person, index) => (
             <span key={index} className="bubble">
@@ -136,6 +161,33 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
           ))}
         </div>
       </div>
+      {showLucidSection && (
+        <div className="form-group lucid-section">
+          <button
+            type="button"
+            className="lucid-toggle"
+            aria-expanded={showLucid}
+            onClick={() => setShowLucid((current) => !current)}
+          >
+            <span className="lucid-toggle-chevron">{showLucid ? '▾' : '▸'}</span>
+            <span>Lucidity questionnaire</span>
+            <span className="lucid-toggle-meta">
+              {answeredCount > 0 ? `${answeredCount}/${LUCID_ITEMS.length} answered` : 'optional'}
+            </span>
+          </button>
+          {showLucid && (
+            <>
+              <p className="lucid-attribution">
+                LuCiD scale by{' '}
+                <a href="https://doi.org/10.1016/j.concog.2012.11.001" target="_blank" rel="noopener noreferrer">
+                  Voss et al. 2013
+                </a>
+              </p>
+              <LucidQuestionnaire responses={lucidResponses} onChange={setLucidResponses} />
+            </>
+          )}
+        </div>
+      )}
       <button
         id="submit-dream"
         className="dream-journal-submit-button"

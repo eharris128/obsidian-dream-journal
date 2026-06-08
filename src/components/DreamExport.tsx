@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
-import jsPDF from 'jspdf';
+import { PDFDocument, StandardFonts, type PDFFont } from 'pdf-lib';
 import { format } from 'date-fns';
 import { Notice, TFile } from 'obsidian';
 import { usePlugin } from '@/hooks/usePlugin';
@@ -10,6 +10,41 @@ interface Dream {
   content: string;
   title: string;
 }
+
+// Standard PDF fonts use WinAnsi encoding and throw on characters they can't
+// represent (emoji, most non-Latin scripts). Drop anything outside the
+// printable ASCII / Latin-1 range so export never fails on freeform content.
+const sanitize = (text: string): string =>
+  text.replace(/[^\t\n\x20-\x7E\xA0-\xFF]/g, '');
+
+// Replacement for jsPDF's splitTextToSize: greedily wrap each paragraph to
+// maxWidth, preserving the user's own line breaks.
+const wrapText = (
+  text: string,
+  font: PDFFont,
+  fontSize: number,
+  maxWidth: number
+): string[] => {
+  const lines: string[] = [];
+  for (const paragraph of sanitize(text).split('\n')) {
+    if (paragraph === '') {
+      lines.push('');
+      continue;
+    }
+    let current = '';
+    for (const word of paragraph.split(' ')) {
+      const candidate = current ? `${current} ${word}` : word;
+      if (current && font.widthOfTextAtSize(candidate, fontSize) > maxWidth) {
+        lines.push(current);
+        current = word;
+      } else {
+        current = candidate;
+      }
+    }
+    if (current) lines.push(current);
+  }
+  return lines;
+};
 
 export const DreamExport: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -46,34 +81,48 @@ export const DreamExport: React.FC = () => {
       })
     );
 
-    const pdf = new jsPDF();
-    let yPosition = 20;
+    const pdfDoc = await PDFDocument.create();
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-    pdf.setFontSize(20);
-    pdf.text('Dream Journal', 20, yPosition);
-    yPosition += 20;
+    const margin = 50;
+    const pageWidth = 612; // US Letter, points
+    const pageHeight = 792;
+    const contentWidth = pageWidth - margin * 2;
+
+    let page = pdfDoc.addPage([pageWidth, pageHeight]);
+    let y = pageHeight - margin;
+
+    // Draw lines, paginating as needed. lineHeight is per-line vertical advance.
+    const drawLines = (lines: string[], size: number, lineHeight: number) => {
+      for (const line of lines) {
+        if (y - lineHeight < margin) {
+          page = pdfDoc.addPage([pageWidth, pageHeight]);
+          y = pageHeight - margin;
+        }
+        y -= lineHeight;
+        if (line) page.drawText(line, { x: margin, y, size, font });
+      }
+    };
+
+    drawLines(['Dream Journal'], 20, 28);
+    y -= 10;
 
     dreams.forEach((dream: Dream) => {
-      pdf.setFontSize(16);
-      pdf.text(dream.title, 20, yPosition);
-      yPosition += 10;
-
-      pdf.setFontSize(14);
-      pdf.text(format(new Date(dream.date), 'PPP'), 20, yPosition);
-      yPosition += 10;
-
-      pdf.setFontSize(12);
-      const splitContent = pdf.splitTextToSize(dream.content, 170);
-      pdf.text(splitContent, 20, yPosition);
-      yPosition += (splitContent.length * 7) + 15;
-
-      if (yPosition > 270) {
-        pdf.addPage();
-        yPosition = 20;
-      }
+      drawLines(wrapText(dream.title, font, 16, contentWidth), 16, 22);
+      drawLines([format(new Date(dream.date), 'PPP')], 14, 20);
+      drawLines(wrapText(dream.content, font, 12, contentWidth), 12, 16);
+      y -= 15;
     });
 
-    pdf.save('dream-journal.pdf'); // TODO: make this dynamic (default to date range)
+    const pdfBytes = await pdfDoc.save();
+    // Trigger a browser download (mobile-safe — no Electron/Node APIs).
+    const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const anchor = activeDocument.createElement('a');
+    anchor.href = url;
+    anchor.download = 'dream-journal.pdf'; // TODO: make this dynamic (default to date range)
+    anchor.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -101,9 +150,9 @@ export const DreamExport: React.FC = () => {
         dateFormat="MM/dd/yyyy"
         icon={null}
       />
-      <button 
+      <button
         className="export-btn"
-        onClick={exportToPDF}
+        onClick={() => void exportToPDF()}
         >
         {/* disabled={!startDate || !endDate} */}
         Export to PDF

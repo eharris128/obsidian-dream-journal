@@ -15,10 +15,12 @@ const DREAM_EXPORT_TAB = 'dream-export-tab-view';
 
 interface DreamJournalSettings {
     dreamsDir: string;
+    showLucidQuestionnaire: boolean;
 }
 
 const DEFAULT_SETTINGS: DreamJournalSettings = {
     dreamsDir: DEFAULT_DREAMS_DIR,
+    showLucidQuestionnaire: true,
 };
 
 class DreamJournalSettingTab extends PluginSettingTab {
@@ -43,6 +45,18 @@ class DreamJournalSettingTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.dreamsDir)
                     .onChange(async (value) => {
                         await this.plugin.updateDreamsDir(value);
+                    })
+            );
+
+        new Setting(containerEl)
+            .setName('Lucidity questionnaire')
+            .setDesc('Show the optional LuCiD scale (Voss et al. 2013) when recording a dream.')
+            .addToggle((toggle) =>
+                toggle
+                    .setValue(this.plugin.settings.showLucidQuestionnaire)
+                    .onChange(async (value) => {
+                        this.plugin.settings.showLucidQuestionnaire = value;
+                        await this.plugin.saveSettings();
                     })
             );
 
@@ -88,25 +102,23 @@ export default class DreamJournalPlugin extends Plugin {
         );
 
         this.addRibbonIcon('moon', OPEN_DREAM_JOURNAL, () => {
-            this.activateView();
+            void this.activateView();
         });
 
         this.addCommand({
             id: 'open-journal',
             name: RECORD_DREAMS,
             callback: () => {
-                this.activateView(DREAM_JOURNAL_TAB);
+                void this.activateView(DREAM_JOURNAL_TAB);
             },
-            hotkeys: []
         });
 
         this.addCommand({
             id: 'open-exporter',
             name: EXPORT_DREAMS,
             callback: () => {
-                this.activateView(DREAM_EXPORT_TAB);
+                void this.activateView(DREAM_EXPORT_TAB);
             },
-            hotkeys: []
         });
 
         this.addSettingTab(new DreamJournalSettingTab(this.app, this));
@@ -119,7 +131,8 @@ export default class DreamJournalPlugin extends Plugin {
     }
 
     async loadSettings() {
-        this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+        const data = (await this.loadData()) as Partial<DreamJournalSettings> | null;
+        this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
     }
 
     async saveSettings() {
@@ -156,6 +169,6 @@ export default class DreamJournalPlugin extends Plugin {
                 active: true,
             });
         }
-        workspace.revealLeaf(leaf);
+        await workspace.revealLeaf(leaf);
     }
 }

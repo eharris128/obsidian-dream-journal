@@ -85,7 +85,6 @@
 
 .emotion-segment.selected {
     stroke: #000;
-    stroke-width: 2;
     stroke-width: 3;
 }
 
@@ -189,20 +188,20 @@
 }
 
 /* Button for adding names */
-.form-group button {
+.form-group .dream-journal-add-person {
     padding: 0.5rem 1rem;
     margin-left: 10px;
     width: 80px;
-    background-color: #007bff; /* Bootstrap primary color */
-    color: white;
+    background-color: var(--interactive-accent);
+    color: var(--text-on-accent);
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 1rem;
 }
 
-.form-group button:hover {
-    background-color: #0056b3; /* Darker shade on hover */
+.form-group .dream-journal-add-person:hover {
+    background-color: var(--interactive-accent-hover);
 }
 
 /* Style for the bubbles */
@@ -384,7 +383,7 @@ h2.react-datepicker__current-month {
   z-index: 1;
   height: 32px;
   width: 32px;
-  text-indent: -999em;
+  color: transparent;
   overflow: hidden;
 }
 .react-datepicker__navigation--previous {
@@ -1013,7 +1012,7 @@ h2.react-datepicker__current-month {
 
 .react-datepicker__aria-live {
   position: absolute;
-  clip-path: circle(0);
+  clip: rect(0, 0, 0, 0);
   border: 0;
   height: 1px;
   margin: -1px;
@@ -1029,3 +1028,113 @@ h2.react-datepicker__current-month {
   vertical-align: -0.125em;
 }
 /* End of DatePicker styles */
+/* --- Lucidity questionnaire (LuCiD scale) --- */
+
+.lucid-section {
+    border-top: 1px solid var(--background-modifier-border);
+    padding-top: 0.75em;
+}
+
+.lucid-toggle {
+    align-items: baseline;
+    appearance: none;
+    background: none;
+    background-color: transparent;
+    flex-wrap: wrap;
+    border: none;
+    box-shadow: none;
+    color: var(--text-normal);
+    cursor: pointer;
+    display: flex;
+    font-size: var(--font-ui-medium);
+    font-weight: 600;
+    gap: 0.5em;
+    height: auto;
+    margin: 0;
+    padding: 0.25em 0;
+    text-align: left;
+    user-select: none;
+    width: 100%;
+}
+
+.lucid-toggle:hover {
+    color: var(--text-accent);
+}
+
+.lucid-toggle-chevron {
+    flex-shrink: 0;
+    width: 1em;
+}
+
+.lucid-toggle-meta {
+    color: var(--text-muted);
+    font-size: var(--font-ui-smaller);
+    font-weight: 400;
+}
+
+.lucid-attribution,
+.lucid-scale-hint {
+    color: var(--text-muted);
+    font-size: var(--font-ui-smaller);
+    margin: 0.5em 0;
+}
+
+.lucid-items {
+    margin: 0;
+    padding-left: 1.5em;
+}
+
+.lucid-item {
+    margin-bottom: 0.85em;
+}
+
+.lucid-item-text {
+    display: block;
+    margin-bottom: 0.3em;
+}
+
+.lucid-item-scale {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em;
+}
+
+.lucid-scale-option {
+    align-items: center;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: var(--radius-s);
+    color: var(--text-muted);
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    min-width: 2em;
+    padding: 0.15em 0.5em;
+    /* Contain the absolutely-positioned hidden radio so focusing it on click
+       doesn't scroll the page to a distant positioned ancestor. */
+    position: relative;
+    user-select: none;
+}
+
+.lucid-scale-option input {
+    height: 0;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    width: 0;
+}
+
+.lucid-scale-option:hover {
+    border-color: var(--interactive-accent);
+    color: var(--text-normal);
+}
+
+.lucid-scale-option:focus-within {
+    box-shadow: 0 0 0 2px var(--background-modifier-border-focus);
+}
+
+.lucid-scale-option.is-selected {
+    background-color: var(--interactive-accent);
+    border-color: var(--interactive-accent);
+    color: var(--text-on-accent);
+}

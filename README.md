@@ -12,6 +12,7 @@ Mobile support:
 
 - Record dream entries with titles and descriptions
 - Select emotions associated with each dream using an emotion wheel
+- Optionally rate each dream on the 28-item LuCiD scale ([Voss et al 2013](https://doi.org/10.1016/j.concog.2012.11.001)) — factor scores (insight, control, thought, realism, memory, dissociation, emotion) are saved as note properties for later analysis
 - Automatically save dream entries as Markdown files in your vault
 - View and manage your dream journal entries within Obsidian
 
@@ -27,17 +28,17 @@ Mobile support:
 1. Click on the moon icon in the left sidebar or use the command "Record dreams" to open the Dream Journal
 2. Enter your dream title and description
 3. Use the emotion wheel to select emotions associated with your dream
-4. Click "Save dream" to record your entry
+4. Optionally expand the lucidity questionnaire and rate the statements that apply (unanswered statements are skipped)
+5. Click "Save dream" to record your entry
 
 ## Upcoming features
 - Indicate whether or not there was any dream recall for a night.
-- Add options to collect lucidity data
+- LuCiD score analysis and visualization
 - Support exporting dreams bucketed by date range.
 
 ## Speculative features
 - Dream sign collection
-- LuCiD question collection, subsequent analysis. [Initial study](https://www.blogs.uni-mainz.de/fb05philosophie/files/2013/04/Voss-et-al-2013_Measuring-Consciousness-in-Dreams.pdf) by Voss et al 2013
-- Dream lucidity questionnaire by [Stumbrys et al 2013](https://boris.unibe.ch/40302/1/11137-17819-2-PB.pdf)
+- Lucid dream and nightmare frequency scales by [Stumbrys et al 2013](https://doi.org/10.11588/ijodr.2013.2.11137)
 - Supplement induction review questions 
 
 ## Development

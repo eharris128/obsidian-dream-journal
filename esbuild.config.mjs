@@ -1,6 +1,9 @@
 import esbuild from "esbuild";
 import process from "process";
-import builtins from "builtin-modules";
+import { builtinModules } from "node:module";
+
+// Mark Node's built-in modules (with and without the `node:` prefix) as external.
+const builtins = [...builtinModules, ...builtinModules.map((m) => `node:${m}`)];
 
 const banner =
 `/*
@@ -17,6 +20,15 @@ const context = await esbuild.context({
 	},
 	entryPoints: ["src/main.tsx"],
 	bundle: true,
+	// Bundle Preact in place of React (smaller, and avoids react-dom's
+	// resource-hoisting code paths). Types still resolve against @types/react.
+	alias: {
+		"react": "preact/compat",
+		"react-dom": "preact/compat",
+		"react-dom/client": "preact/compat/client",
+		"react/jsx-runtime": "preact/jsx-runtime",
+		"react/jsx-dev-runtime": "preact/jsx-dev-runtime",
+	},
 	external: [
 		"obsidian",
 		"electron",

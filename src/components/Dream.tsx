@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Notice, normalizePath } from 'obsidian';
-import { NewDream } from '@/components/NewDream';
+import { NewDream, NewDreamData } from '@/components/NewDream';
 import { usePlugin } from '@/hooks/usePlugin';
+import { computeLucidScores, LUCID_ITEMS } from '@/lucid';
 import { format } from 'date-fns';
 
 // Characters Obsidian does not allow in file names (plus link-breaking # ^ [ ])
@@ -17,22 +18,34 @@ export const Dream: React.FC = () => {
     const [dreams, setDreams] = useState<DreamEntry[]>([]);
     const plugin = usePlugin();
 
-    const handleNewDream = async (dreamTitle: string, dreamContent: string, emotions: string[]) => {
+    const handleNewDream = async ({ title, content, emotions, lucidResponses }: NewDreamData) => {
         if (!plugin) {
             console.error('Dream journal plugin is not available');
             return;
         }
 
-        const { vault } = plugin.app;
-        const safeTitle = dreamTitle.replace(INVALID_FILENAME_CHARS, '-').trim() || 'dream';
+        const { vault, fileManager } = plugin.app;
+        const safeTitle = title.replace(INVALID_FILENAME_CHARS, '-').trim() || 'dream';
         const fileName = `${safeTitle}-${format(new Date(), 'yyyy-MM-dd-HHmmss')}.md`;
         const filePath = normalizePath(`${plugin.settings.dreamsDir}/${fileName}`);
 
         try {
             // Make sure the configured folder exists, then create the file
             await plugin.ensureDreamsFolder();
-            await vault.create(filePath, dreamContent);
-            setDreams([...dreams, { title: dreamTitle, content: dreamContent, emotions }]);
+            const file = await vault.create(filePath, content);
+
+            // Store LuCiD factor scores as note properties for later analysis.
+            const lucidScores = computeLucidScores(lucidResponses);
+            if (lucidScores) {
+                await fileManager.processFrontMatter(file, (frontmatter: Record<string, unknown>) => {
+                    for (const [factorKey, score] of Object.entries(lucidScores.factors)) {
+                        frontmatter[`lucid-${factorKey}`] = score;
+                    }
+                    frontmatter['lucid-answered'] = `${lucidScores.answered}/${LUCID_ITEMS.length}`;
+                });
+            }
+
+            setDreams([...dreams, { title, content, emotions }]);
             new Notice('Dream saved');
         } catch (error) {
             console.error('Failed to save dream:', error);
@@ -42,7 +55,7 @@ export const Dream: React.FC = () => {
     return (
         <div>
             <h1>What did I dream about?</h1>
-            <NewDream onSubmit={handleNewDream} />
+            <NewDream onSubmit={(data) => void handleNewDream(data)} />
         </div>
     );
 };
