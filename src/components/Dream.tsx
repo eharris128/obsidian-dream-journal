@@ -37,7 +37,7 @@ export const Dream: React.FC = () => {
             // Store LuCiD factor scores as note properties for later analysis.
             const lucidScores = computeLucidScores(lucidResponses);
             if (lucidScores) {
-                await fileManager.processFrontMatter(file, (frontmatter) => {
+                await fileManager.processFrontMatter(file, (frontmatter: Record<string, unknown>) => {
                     for (const [factorKey, score] of Object.entries(lucidScores.factors)) {
                         frontmatter[`lucid-${factorKey}`] = score;
                     }

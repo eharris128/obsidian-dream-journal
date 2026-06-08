@@ -16,7 +16,8 @@ interface NewDreamProps {
   onSubmit: (dream: NewDreamData) => void;
 }
 
-const emptyLucidResponses = (): (number | null)[] => Array(LUCID_ITEMS.length).fill(null);
+const emptyLucidResponses = (): (number | null)[] =>
+  Array.from({ length: LUCID_ITEMS.length }, () => null);
 
 export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
   const plugin = usePlugin();

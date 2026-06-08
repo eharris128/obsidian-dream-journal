@@ -118,7 +118,7 @@ export const DreamExport: React.FC = () => {
     // Trigger a browser download (mobile-safe — no Electron/Node APIs).
     const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
+    const anchor = activeDocument.createElement('a');
     anchor.href = url;
     anchor.download = 'dream-journal.pdf'; // TODO: make this dynamic (default to date range)
     anchor.click();

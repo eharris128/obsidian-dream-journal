@@ -169,6 +169,6 @@ export default class DreamJournalPlugin extends Plugin {
                 active: true,
             });
         }
-        workspace.revealLeaf(leaf);
+        await workspace.revealLeaf(leaf);
     }
 }
