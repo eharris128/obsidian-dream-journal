@@ -14,11 +14,22 @@ interface DreamEntry {
   emotions: string[];
 }
 
+// Human-readable summary of emotions and people, appended to the note body.
+const buildBodySummary = (emotions: string[], people: string[]): string => {
+    const emotionsSection = emotions.length > 0
+        ? `\n\n# I felt:\n${emotions.join(', ')}`
+        : '';
+    const peopleSection = people.length > 0
+        ? `\n\n# People:\n- ${people.join('\n- ')}`
+        : '';
+    return `${emotionsSection}${peopleSection}`;
+};
+
 export const Dream: React.FC = () => {
     const [dreams, setDreams] = useState<DreamEntry[]>([]);
     const plugin = usePlugin();
 
-    const handleNewDream = async ({ title, content, emotions, lucidResponses }: NewDreamData) => {
+    const handleNewDream = async ({ title, content, emotions, people, lucidResponses }: NewDreamData) => {
         if (!plugin) {
             console.error('Dream journal plugin is not available');
             return;
@@ -28,24 +39,32 @@ export const Dream: React.FC = () => {
         const safeTitle = title.replace(INVALID_FILENAME_CHARS, '-').trim() || 'dream';
         const fileName = `${safeTitle}-${format(new Date(), 'yyyy-MM-dd-HHmmss')}.md`;
         const filePath = normalizePath(`${plugin.settings.dreamsDir}/${fileName}`);
+        const body = plugin.settings.summaryInBody
+            ? `${content}${buildBodySummary(emotions, people)}`
+            : content;
 
         try {
             // Make sure the configured folder exists, then create the file
             await plugin.ensureDreamsFolder();
-            const file = await vault.create(filePath, content);
+            const file = await vault.create(filePath, body);
 
-            // Store LuCiD factor scores as note properties for later analysis.
+            // Store emotions, people and LuCiD factor scores as note properties
+            // so other plugins (Dataview, Bases, ...) can query them.
             const lucidScores = computeLucidScores(lucidResponses);
-            if (lucidScores) {
+            if (emotions.length > 0 || people.length > 0 || lucidScores) {
                 await fileManager.processFrontMatter(file, (frontmatter: Record<string, unknown>) => {
-                    for (const [factorKey, score] of Object.entries(lucidScores.factors)) {
-                        frontmatter[`lucid-${factorKey}`] = score;
+                    if (emotions.length > 0) frontmatter['emotions'] = emotions;
+                    if (people.length > 0) frontmatter['people'] = people;
+                    if (lucidScores) {
+                        for (const [factorKey, score] of Object.entries(lucidScores.factors)) {
+                            frontmatter[`lucid-${factorKey}`] = score;
+                        }
+                        frontmatter['lucid-answered'] = `${lucidScores.answered}/${LUCID_ITEMS.length}`;
                     }
-                    frontmatter['lucid-answered'] = `${lucidScores.answered}/${LUCID_ITEMS.length}`;
                 });
             }
 
-            setDreams([...dreams, { title, content, emotions }]);
+            setDreams([...dreams, { title, content: body, emotions }]);
             new Notice('Dream saved');
         } catch (error) {
             console.error('Failed to save dream:', error);

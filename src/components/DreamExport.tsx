@@ -55,7 +55,7 @@ export const DreamExport: React.FC = () => {
     if (!startDate || !endDate) return;
 
     if (!plugin) return;
-    const vault = plugin.app.vault;
+    const { vault, metadataCache } = plugin.app;
     const dreamsFolder = vault.getFolderByPath(plugin.settings.dreamsDir);
     if (!dreamsFolder) {
       new Notice('No dreams folder found');
@@ -73,10 +73,13 @@ export const DreamExport: React.FC = () => {
     const dreams: Dream[] = await Promise.all(
       dreamFiles.map(async file => {
         const content = await vault.cachedRead(file);
+        // Properties (emotions, people, lucidity scores) are metadata, not
+        // prose: leave the YAML block out of the PDF.
+        const frontmatterEnd = metadataCache.getFileCache(file)?.frontmatterPosition?.end.offset;
         return {
           date: new Date(file.stat.ctime),
           title: file.basename,
-          content
+          content: frontmatterEnd ? content.slice(frontmatterEnd).replace(/^\s+/, '') : content,
         };
       })
     );

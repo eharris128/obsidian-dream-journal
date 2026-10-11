@@ -40,16 +40,9 @@ export const NewDream: React.FC<NewDreamProps> = ({ onSubmit }) => {
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isFormValid) {
-      const emotionsSection = selectedEmotions.length > 0
-        ? `\n\n# I felt:\n${selectedEmotions.join(', ')}`
-        : '';
-      const peopleSection = people.length > 0
-        ? `\n\n# People:\n- ${people.join('\n- ')}`
-        : '';
-      const fullDreamContent = `${dreamContent}${emotionsSection}${peopleSection}`;
       onSubmit({
         title: dreamTitle,
-        content: fullDreamContent,
+        content: dreamContent,
         emotions: selectedEmotions,
         people,
         lucidResponses,

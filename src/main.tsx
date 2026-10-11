@@ -16,11 +16,14 @@ const DREAM_EXPORT_TAB = 'dream-export-tab-view';
 interface DreamJournalSettings {
     dreamsDir: string;
     showLucidQuestionnaire: boolean;
+    // Also append emotions and people as text at the end of the note body.
+    summaryInBody: boolean;
 }
 
 const DEFAULT_SETTINGS: DreamJournalSettings = {
     dreamsDir: DEFAULT_DREAMS_DIR,
     showLucidQuestionnaire: true,
+    summaryInBody: true,
 };
 
 class DreamJournalSettingTab extends PluginSettingTab {
@@ -56,6 +59,21 @@ class DreamJournalSettingTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.showLucidQuestionnaire)
                     .onChange(async (value) => {
                         this.plugin.settings.showLucidQuestionnaire = value;
+                        await this.plugin.saveSettings();
+                    })
+            );
+
+        new Setting(containerEl)
+            .setName('Emotions and people in note body')
+            .setDesc(
+                'Emotions and people are always saved as note properties. ' +
+                'Turn this on to also list them as text at the end of each dream.'
+            )
+            .addToggle((toggle) =>
+                toggle
+                    .setValue(this.plugin.settings.summaryInBody)
+                    .onChange(async (value) => {
+                        this.plugin.settings.summaryInBody = value;
                         await this.plugin.saveSettings();
                     })
             );

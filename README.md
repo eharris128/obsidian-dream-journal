@@ -12,6 +12,8 @@ Mobile support:
 
 - Record dream entries with titles and descriptions
 - Select emotions associated with each dream using an emotion wheel
+- Note the significant people present in the dream
+- Emotions and people are saved as note properties (`emotions`, `people`) so you can query them with Dataview, Bases, or similar; a setting also lists them as text at the end of the note
 - Optionally rate each dream on the 28-item LuCiD scale ([Voss et al 2013](https://doi.org/10.1016/j.concog.2012.11.001)) — factor scores (insight, control, thought, realism, memory, dissociation, emotion) are saved as note properties for later analysis
 - Automatically save dream entries as Markdown files in your vault
 - View and manage your dream journal entries within Obsidian
