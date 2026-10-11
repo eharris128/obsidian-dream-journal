@@ -4,7 +4,7 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.0.7] - 2026-10-11
 
 ### Added
 
@@ -51,7 +51,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Initial public release.
 
-[Unreleased]: https://github.com/eharris128/obsidian-dream-journal/compare/0.0.6...HEAD
+[0.0.7]: https://github.com/eharris128/obsidian-dream-journal/releases/tag/0.0.7
 [0.0.6]: https://github.com/eharris128/obsidian-dream-journal/releases/tag/0.0.6
 [0.0.5]: https://github.com/eharris128/obsidian-dream-journal/releases/tag/0.0.5
 [0.0.4]: https://github.com/eharris128/obsidian-dream-journal/releases/tag/0.0.4
